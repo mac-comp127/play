@@ -4,26 +4,23 @@ import edu.macalester.graphics.Image;
 
 public class PixelArray {
     private final int width, height;
-    private final int channelCount;
-    private final byte[] pixels;
+    private final int[] pixels;
     
     public PixelArray(Image image) {
         this(
             image.getImageWidth(),
             image.getImageHeight(),
-            4,
-            image.toByteArray(Image.PixelFormat.ARGB)
+            image.toIntArray()
         );
     }
 
-    public PixelArray(int width, int height, int channelCount) {
-        this(width, height, channelCount, new byte[width * height * channelCount]);
+    public PixelArray(int width, int height) {
+        this(width, height, new int[width * height]);
     }
 
-    private PixelArray(int width, int height, int channelCount, byte[] pixels) {
+    private PixelArray(int width, int height, int[] pixels) {
         this.width = width;
         this.height = height;
-        this.channelCount = channelCount;
         this.pixels = pixels;
     }
 
@@ -35,20 +32,16 @@ public class PixelArray {
         return height;
     }
 
-    public int getChannelCount() {
-        return channelCount;
-    }
-
-    public byte getPixel(int x, int y, int chan) {
+    public int getPixel(int x, int y) {
         if (outOfBounds(x, y)) {
             return 0;
         }
-        return pixels[pixelIndex(x, y, chan)];
+        return pixels[pixelIndex(x, y)];
     }
 
-    public void setPixel(int x, int y, int chan, byte value) {
+    public void setPixel(int x, int y, int value) {
         if (!outOfBounds(x, y)) {
-            pixels[pixelIndex(x, y, chan)] = value;
+            pixels[pixelIndex(x, y)] = value;
         }
     }
 
@@ -56,11 +49,11 @@ public class PixelArray {
         return x < 0 || x >= width || y < 0 || y >= height;
     }
 
-    private int pixelIndex(int x, int y, int chan) {
-        return (x + y * width) * channelCount + chan;
+    private int pixelIndex(int x, int y) {
+        return x + y * width;
     }
 
     public Image toImage() {
-        return new Image(width, height, pixels, Image.PixelFormat.ARGB);
+        return new Image(width, height, pixels);
     }
 }

@@ -18,7 +18,7 @@ public class Dragon {
             draw(new Point(300, 500), 0, 500, levels, 1);
             canvas.draw();
             System.out.println(levels);
-            canvas.pause(1000);
+            canvas.pause(400);
         }
     }
 
